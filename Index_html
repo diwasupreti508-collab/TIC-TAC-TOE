@@ -1,92 +1,31 @@
-const boardEl = document.getElementById('board');
-const statusEl = document.getElementById('status');
-const scoreXEl = document.getElementById('scoreX');
-const scoreOEl = document.getElementById('scoreO');
-const scoreTieEl = document.getElementById('scoreTie');
 
-let board = Array(9).fill(null);
-let current = 'X';
-let gameOver = false;
-let scores = { X: 0, O: 0, Tie: 0 };
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <h1>Tic Tac Toe</h1>
+    <div class="status" id="status">X's turn</div>
 
-const WIN_LINES = [
-  [0, 1, 2], [3, 4, 5], [6, 7, 8],
-  [0, 3, 6], [1, 4, 7], [2, 5, 8],
-  [0, 4, 8], [2, 4, 6]
-];
+    <div class="score">
+      <div>X: <span id="scoreX">0</span></div>
+      <div>O: <span id="scoreO">0</span></div>
+      <div>Ties: <span id="scoreTie">0</span></div>
+    </div>
 
-function render() {
-  boardEl.innerHTML = '';
-  board.forEach((val, i) => {
-    const cell = document.createElement('div');
-    cell.className = 'cell' + (val ? ' taken ' + val.toLowerCase() : '');
-    cell.textContent = val || '';
-    cell.addEventListener('click', () => handleClick(i));
-    boardEl.appendChild(cell);
-  });
-}
+    <div class="board" id="board"></div>
 
-function handleClick(i) {
-  if (gameOver || board[i]) return;
+    <div class="controls">
+      <button id="resetBtn">New Round</button>
+      <button id="resetScoreBtn">Reset Scores</button>
+    </div>
+  </div>
 
-  board[i] = current;
-  const winLine = checkWinner(current);
-
-  if (winLine) {
-    gameOver = true;
-    statusEl.textContent = current + ' wins!';
-    scores[current]++;
-    updateScores();
-    render();
-    highlightWin(winLine);
-    return;
-  }
-
-  if (board.every(c => c)) {
-    gameOver = true;
-    statusEl.textContent = "It's a tie!";
-    scores.Tie++;
-    updateScores();
-    render();
-    return;
-  }
-
-  current = current === 'X' ? 'O' : 'X';
-  statusEl.textContent = current + "'s turn";
-  render();
-}
-
-function checkWinner(player) {
-  for (const line of WIN_LINES) {
-    if (line.every(idx => board[idx] === player)) return line;
-  }
-  return null;
-}
-
-function highlightWin(line) {
-  const cells = boardEl.children;
-  line.forEach(idx => cells[idx].classList.add('win'));
-}
-
-function updateScores() {
-  scoreXEl.textContent = scores.X;
-  scoreOEl.textContent = scores.O;
-  scoreTieEl.textContent = scores.Tie;
-}
-
-function resetRound() {
-  board = Array(9).fill(null);
-  current = 'X';
-  gameOver = false;
-  statusEl.textContent = "X's turn";
-  render();
-}
-
-document.getElementById('resetBtn').addEventListener('click', resetRound);
-document.getElementById('resetScoreBtn').addEventListener('click', () => {
-  scores = { X: 0, O: 0, Tie: 0 };
-  updateScores();
-  resetRound();
-});
-
-render();
+  <script src="script.js"></script>
+</body>
+</html>
